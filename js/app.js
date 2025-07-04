@@ -66,17 +66,37 @@ class AdminCitas {
 
         // Generar citas
         this.citas.forEach(cita => {
-            const divCitas = document.createElement('DIV');
-            divCitas.classList.add('mx-5', 'my-10', 'bg-white', 'shadow-md', 'px-5', 'py-10', 'rounded-xl');
+            const divCita = document.createElement('div');
+            divCita.classList.add('mx-5', 'my-10', 'bg-white', 'shadow-md', 'px-5', 'py-10', 'rounded-xl', 'p-3');
 
-            const paciente = document.createElement('P');
-            paciente.classList.add('font-normal', 'mb-3', 'text-gray-700', 'normal-case');
-            paciente.innerHTML = `<span class="font-bold uppercase">Paciente:</span> ${cita.paciente}`;
+            const paciente = document.createElement('p');
+            paciente.classList.add('font-normal', 'mb-3', 'text-gray-700', 'normal-case')
+            paciente.innerHTML = `<span class="font-bold uppercase">Paciente: </span> ${cita.paciente}`;
 
-            // Inyectar HTML
-            divCitas.appendChild(paciente);
-            contenedorCitas.appendChild(divCitas);
-        })
+            const propietario = document.createElement('p');
+            propietario.classList.add('font-normal', 'mb-3', 'text-gray-700', 'normal-case')
+            propietario.innerHTML = `<span class="font-bold uppercase">Propietario: </span> ${cita.propietario}`;
+
+            const email = document.createElement('p');
+            email.classList.add('font-normal', 'mb-3', 'text-gray-700', 'normal-case')
+            email.innerHTML = `<span class="font-bold uppercase">E-mail: </span> ${cita.email}`;
+
+            const fecha = document.createElement('p');
+            fecha.classList.add('font-normal', 'mb-3', 'text-gray-700', 'normal-case')
+            fecha.innerHTML = `<span class="font-bold uppercase">Fecha: </span> ${cita.fecha}`;
+
+            const sintomas = document.createElement('p');
+            sintomas.classList.add('font-normal', 'mb-3', 'text-gray-700', 'normal-case')
+            sintomas.innerHTML = `<span class="font-bold uppercase">Síntomas: </span> ${cita.sintomas}`;
+
+            // Agregar al HTML
+            divCita.appendChild(paciente);
+            divCita.appendChild(propietario);
+            divCita.appendChild(email);
+            divCita.appendChild(fecha);
+            divCita.appendChild(sintomas);
+            contenedorCitas.appendChild(divCita);
+        });
     }
 }
 
