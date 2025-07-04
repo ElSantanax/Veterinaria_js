@@ -4,8 +4,8 @@ const propietarioInput = document.querySelector('#propietario');
 const emailInput = document.querySelector('#email');
 const fechaInput = document.querySelector('#fecha');
 const sintomasInput = document.querySelector('#sintomas');
-
 const formulario = document.querySelector('#formulario-cita');
+const contenedorCitas = document.querySelector('#citas');
 
 // Event
 pacienteInput.addEventListener('change', datosCita);
@@ -13,7 +13,6 @@ propietarioInput.addEventListener('change', datosCita);
 emailInput.addEventListener('change', datosCita);
 fechaInput.addEventListener('change', datosCita);
 sintomasInput.addEventListener('change', datosCita);
-
 formulario.addEventListener('submit', submitCita)
 
 const citaObj = {
@@ -57,7 +56,27 @@ class AdminCitas {
 
     agregar(cita) {
         this.citas = [...this.citas, cita];
-        console.log(this.citas);
+        this.mostrar();
+    }
+
+    mostrar() {
+        while (contenedorCitas.firstChild) {
+            contenedorCitas.removeChild(contenedorCitas.firstChild);
+        }
+
+        // Generar citas
+        this.citas.forEach(cita => {
+            const divCitas = document.createElement('DIV');
+            divCitas.classList.add('mx-5', 'my-10', 'bg-white', 'shadow-md', 'px-5', 'py-10', 'rounded-xl');
+
+            const paciente = document.createElement('P');
+            paciente.classList.add('font-normal', 'mb-3', 'text-gray-700', 'normal-case');
+            paciente.innerHTML = `<span class="font-bold uppercase">Paciente:</span> ${cita.paciente}`;
+
+            // Inyectar HTML
+            divCitas.appendChild(paciente);
+            contenedorCitas.appendChild(divCitas);
+        })
     }
 }
 
@@ -70,7 +89,6 @@ const citas = new AdminCitas();
 
 function submitCita(e) {
     e.preventDefault();
-
     if (Object.values(citaObj).some(valor => valor.trim() === '')) {
         new Notificacion({
             texto: 'Todos los campos son obligatorios',
