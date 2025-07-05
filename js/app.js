@@ -117,4 +117,14 @@ function submitCita(e) {
         return;
     }
     citas.agregar(citaObj);
+    formulario.reset();
+    reiniciarObjetoCita();
+}
+
+function reiniciarObjetoCita() {
+    citaObj.paciente = '';
+    citaObj.propietario = '';
+    citaObj.email = '';
+    citaObj.fecha = '';
+    citaObj.sintomas = '';
 }
