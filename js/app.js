@@ -116,11 +116,17 @@ function submitCita(e) {
         })
         return;
     }
-    citas.agregar(citaObj);
+
+    citas.agregar({ ...citaObj });
     formulario.reset();
-    reiniciarObjetoCita();
+    reiniciarObjetoCita(); // Borrar datos del formulario
+    new Notificacion({
+        texto: 'Paciente registrado',
+        tipo: 'exito'
+    })
 }
 
+// Borrar datos del formulario
 function reiniciarObjetoCita() {
     citaObj.paciente = '';
     citaObj.propietario = '';
