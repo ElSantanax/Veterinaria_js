@@ -17,6 +17,7 @@ sintomasInput.addEventListener('change', datosCita);
 formulario.addEventListener('submit', submitCita)
 
 const citaObj = {
+    id: generarId(),
     paciente: '',
     propietario: '',
     email: '',
@@ -137,6 +138,7 @@ function submitCita(e) {
     }
 
     citas.agregar({ ...citaObj });
+    id: generarId(),
     formulario.reset();
     reiniciarObjetoCita(); // Borrar datos del formulario
     new Notificacion({
@@ -145,8 +147,13 @@ function submitCita(e) {
     })
 }
 
+function generarId() {
+    return Math.random().toString(36).substring(2) + Date.now();
+}
+
 // Borrar datos del formulario
 function reiniciarObjetoCita() {
+    citaObj.id = generarId();
     citaObj.paciente = '';
     citaObj.propietario = '';
     citaObj.email = '';
