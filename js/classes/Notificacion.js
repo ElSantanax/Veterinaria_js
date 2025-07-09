@@ -1,3 +1,5 @@
+import { formulario } from "../selectores.js";
+
 export default class Notificacion {
     constructor({ texto, tipo }) {
         this.texto = texto;
