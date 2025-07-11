@@ -1,4 +1,4 @@
-import { contenedorCitas} from "../selectores.js";
+import { contenedorCitas } from "../selectores.js";
 import { cargarEdicion } from "../funciones.js";
 
 export default class AdminCitas {

@@ -1,5 +1,7 @@
+let DB;
+
 import Notificacion from "./classes/Notificacion.js";
-import { citaObj, editando} from "./variables.js";
+import { citaObj, editando } from "./variables.js";
 import AdminCitas from "./classes/AdminCitas.js";
 import { formulario, formularioInput, pacienteInput, propietarioInput, emailInput, fechaInput, sintomasInput } from "./selectores.js";
 
@@ -65,4 +67,46 @@ export function cargarEdicion(cita) {
     editando.value = true;
 
     formularioInput.value = "Guardan cambios"
+}
+
+export function creaDB() {
+    // Crear base de datos en una versión 1.0
+    const crearDB = window.indexedDB.open('citas', 1);
+
+    // 404
+    crearDB.oneerror = function () {
+        console.log('Hubo un error');
+    }
+
+    // 200
+    crearDB.onsuccess = function () {
+        console.log('Base de datos creada');
+
+        DB = crearDB.result;
+
+        console.log(DB);
+    }
+
+    // Crear schema
+    crearDB.onupgradeneeded = function (e) {
+        const db = e.target.result;
+
+        const objectStore = db.createObjectStore('citas', {
+            KeyPath: 'id',
+            autoIncrement: true,
+        });
+
+        objectStore.createIndex('paciente', 'paciente', { unique: false });
+        objectStore.createIndex('propietario', 'propietario', { unique: false });
+        objectStore.createIndex('email', 'email', { unique: false });
+        objectStore.createIndex('fecha', 'fecha', { unique: false });
+        objectStore.createIndex('sintomas', 'sintomas', { unique: false });
+        objectStore.createIndex('id', 'id', { unique: true });
+
+        console.log('Db creada y lista');
+    }
+}
+
+export function eventListener() {
+
 }
