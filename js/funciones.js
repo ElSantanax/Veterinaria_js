@@ -13,6 +13,13 @@ export function datosCita(e) {
 
 export function submitCita(e) {
     e.preventDefault();
+    // Sincronizar manualmente los valores del formulario con citaObj
+    citaObj.paciente = pacienteInput.value;
+    citaObj.propietario = propietarioInput.value;
+    citaObj.email = emailInput.value;
+    citaObj.fecha = fechaInput.value;
+    citaObj.sintomas = sintomasInput.value;
+
     if (Object.values(citaObj).some(valor => valor.trim() === '')) {
         new Notificacion({
             texto: 'Todos los campos son obligatorios',
@@ -22,11 +29,27 @@ export function submitCita(e) {
     }
 
     if (editando.value) {
-        citas.editar({ ...citaObj });
-        new Notificacion({
-            texto: 'Actualizado correctamente',
-            tipo: 'exito'
-        });
+        console.log('Cita a editar:', citaObj);
+        // citas.editar({ ...citaObj }); // Eliminado porque la actualización se hace con IndexedDB y mostrar recarga desde la base de datos
+
+        // Edita en indexedDB
+        const transaction = DB.transaction(['citas'], 'readwrite');
+        const objectStore = transaction.objectStore('citas');
+
+        objectStore.put(citaObj);
+
+        transaction.oncomplete = () => {
+            new Notificacion({
+                texto: 'Actualizado correctamente',
+                tipo: 'exito'
+            });
+            citas.mostrar();
+        }
+
+        transaction.onerror = () => {
+            console.log('Hubo un error');
+        }
+
     } else {
         // Generar un id único para la cita
         citaObj.id = generarId();
