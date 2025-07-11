@@ -29,10 +29,24 @@ export function submitCita(e) {
         });
     } else {
         citas.agregar({ ...citaObj });
-        new Notificacion({
-            texto: 'Paciente registrado',
-            tipo: 'exito'
-        });
+
+        // Insertar registro en indexDB
+        const transaction = DB.transaction(['citas'], 'readwrite');
+
+        // Habilitar el objectStore
+        const objectStore = transaction.objectStore('citas');
+
+        // Insertar en la BD
+        objectStore.add(citaObj);
+
+        transaction.oncomplete = function () {
+            console.log('Cita agregada');
+
+            new Notificacion({
+                texto: 'Paciente registrado',
+                tipo: 'exito'
+            });
+        }
     }
 
     formulario.reset();
@@ -92,7 +106,7 @@ export function creaDB() {
         const db = e.target.result;
 
         const objectStore = db.createObjectStore('citas', {
-            KeyPath: 'id',
+            keyPath: 'id',
             autoIncrement: true,
         });
 
