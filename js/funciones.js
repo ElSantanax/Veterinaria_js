@@ -1,4 +1,4 @@
-let DB;
+export let DB;
 
 import Notificacion from "./classes/Notificacion.js";
 import { citaObj, editando } from "./variables.js";
@@ -28,16 +28,14 @@ export function submitCita(e) {
             tipo: 'exito'
         });
     } else {
+        // Generar un id único para la cita
+        citaObj.id = generarId();
         citas.agregar({ ...citaObj });
 
         // Insertar registro en indexDB
         const transaction = DB.transaction(['citas'], 'readwrite');
-
-        // Habilitar el objectStore
         const objectStore = transaction.objectStore('citas');
-
-        // Insertar en la BD
-        objectStore.add(citaObj);
+        objectStore.add({ ...citaObj });
 
         transaction.oncomplete = function () {
             console.log('Cita agregada');
@@ -46,13 +44,14 @@ export function submitCita(e) {
                 texto: 'Paciente registrado',
                 tipo: 'exito'
             });
+
+            citas.mostrar();
+            formulario.reset();
+            reiniciarObjetoCita(); // Borrar datos del formulario
+            formularioInput.value = "Guardar cambios"
+            editando.value = false;
         }
     }
-
-    formulario.reset();
-    reiniciarObjetoCita(); // Borrar datos del formulario
-    formularioInput.value = "Registrar Paciente"
-    editando.value = false;
 }
 
 export function generarId() {
@@ -61,7 +60,7 @@ export function generarId() {
 
 // Borrar datos del formulario
 export function reiniciarObjetoCita() {
-    citaObj.id = generarId();
+    // citaObj.id = generarId();
     citaObj.paciente = '';
     citaObj.propietario = '';
     citaObj.email = '';
@@ -80,7 +79,7 @@ export function cargarEdicion(cita) {
 
     editando.value = true;
 
-    formularioInput.value = "Guardan cambios"
+    formularioInput.value = "Guardar cambios"
 }
 
 export function creaDB() {
@@ -88,7 +87,7 @@ export function creaDB() {
     const crearDB = window.indexedDB.open('citas', 1);
 
     // 404
-    crearDB.oneerror = function () {
+    crearDB.onerror = function () {
         console.log('Hubo un error');
     }
 
@@ -98,7 +97,8 @@ export function creaDB() {
 
         DB = crearDB.result;
 
-        console.log(DB);
+        // Monstrar citas al cargar - indexedDB ya esta listo
+        citas.mostrar();
     }
 
     // Crear schema
@@ -107,7 +107,7 @@ export function creaDB() {
 
         const objectStore = db.createObjectStore('citas', {
             keyPath: 'id',
-            autoIncrement: true,
+            autoIncrement: false,
         });
 
         objectStore.createIndex('paciente', 'paciente', { unique: false });
