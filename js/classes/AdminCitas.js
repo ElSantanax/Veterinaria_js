@@ -19,7 +19,20 @@ export default class AdminCitas {
 
     eliminar(id) {
         this.citas = this.citas.filter(cita => cita.id !== id);
-        this.mostrar();
+
+        const transaction = DB.transaction(['citas'], 'readwrite');
+        const objectStore = transaction.objectStore('citas');
+
+        objectStore.delete(id);
+
+        transaction.oncomplete = () => {
+            console.log(`Cita ${id} eliminada`);
+            this.mostrar();
+        }
+
+        transaction.onerror = () => {
+            console.log('Error al eliminar la cita');
+        }
     }
 
     mostrar() {
